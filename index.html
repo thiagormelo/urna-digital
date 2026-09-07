@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <meta name="theme-color" content="#0f2b62">
-  <title>Urna Digital • Tribunal do Júri</title>
+  <title>Urna Digital Goiatins • Chamada e Sorteio</title>
   <style>
     :root {
       --bg: #eef3f9;
@@ -417,6 +417,60 @@
     .kbd-help { color: var(--muted); font-size: .7rem; text-align: center; margin-top: 12px; }
     kbd { background: #e9eef5; border: 1px solid #d2dbe7; border-bottom-width: 2px; border-radius: 5px; padding: 1px 5px; color: #405168; font-size: .68rem; font-family: inherit; }
 
+
+
+    /* ETAPA 1 • CHAMADA NOMINAL */
+    .attendance-panel { grid-column: 1 / -1; padding: 22px; overflow: hidden; }
+    .attendance-head { display: flex; justify-content: space-between; gap: 18px; align-items: flex-start; margin-bottom: 16px; }
+    .step-badge { display: inline-flex; align-items: center; gap: 7px; border-radius: 999px; padding: 6px 10px; background: #eaf0fb; color: var(--primary); font-size: .7rem; font-weight: 900; letter-spacing: .06em; margin-bottom: 8px; }
+    .attendance-head h2 { margin: 0; color: var(--primary-2); font-size: 1.25rem; }
+    .attendance-head p { margin: 6px 0 0; color: var(--muted); font-size: .88rem; max-width: 820px; line-height: 1.45; }
+    .attendance-summary { display: grid; grid-template-columns: repeat(4, minmax(90px, 1fr)); gap: 8px; min-width: 440px; }
+    .attendance-stat { border: 1px solid var(--line); background: var(--surface-2); border-radius: 12px; padding: 10px; text-align: center; }
+    .attendance-stat strong { display: block; font-size: 1.25rem; color: var(--primary-2); }
+    .attendance-stat span { display: block; margin-top: 2px; font-size: .67rem; color: var(--muted); font-weight: 750; }
+    .attendance-stat.present strong { color: var(--success); }
+    .attendance-stat.absent strong { color: var(--danger); }
+    .attendance-stat.excused strong { color: var(--warning); }
+
+    .attendance-tools { display: flex; gap: 8px; align-items: center; flex-wrap: wrap; padding: 12px; border: 1px solid var(--line); border-radius: 13px; background: #fbfcfe; margin-bottom: 15px; }
+    .attendance-search { flex: 1; min-width: 250px; border: 1px solid var(--line); border-radius: 10px; padding: 10px 12px; color: var(--text); background: white; }
+    .attendance-filter { border: 1px solid var(--line); border-radius: 10px; padding: 10px 11px; background: white; color: var(--text); }
+    .mini-btn { border: 1px solid var(--line); background: white; color: var(--primary-2); border-radius: 10px; padding: 9px 11px; font-size: .76rem; font-weight: 800; cursor: pointer; }
+    .mini-btn:hover { background: #f5f8fc; }
+    .mini-btn.danger { color: var(--danger); }
+
+    .attendance-groups { display: grid; grid-template-columns: minmax(0, 1.45fr) minmax(320px, .8fr); gap: 15px; align-items: start; }
+    .attendance-group { border: 1px solid var(--line); border-radius: 14px; overflow: hidden; background: white; }
+    .attendance-group-head { padding: 12px 14px; display: flex; justify-content: space-between; align-items: center; background: var(--surface-2); border-bottom: 1px solid var(--line); }
+    .attendance-group-head strong { color: var(--primary-2); font-size: .86rem; }
+    .attendance-group-head span { color: var(--muted); font-size: .72rem; }
+    .attendance-list { max-height: 500px; overflow-y: auto; padding: 8px; display: flex; flex-direction: column; gap: 6px; }
+    .attendance-row { border: 1px solid var(--line); border-radius: 11px; padding: 9px 10px; display: grid; grid-template-columns: 34px minmax(180px, 1fr) auto; gap: 9px; align-items: center; background: #fff; transition: .16s ease; }
+    .attendance-row[data-status="presente"] { border-color: #a7dbc9; background: #f0fbf7; }
+    .attendance-row[data-status="ausente"] { border-color: #f0b5b5; background: #fff5f5; }
+    .attendance-row[data-status="dispensado"] { border-color: #f1d5a6; background: #fff9ef; }
+    .attendance-number { width: 30px; height: 30px; display: grid; place-items: center; border-radius: 50%; background: #e8edf4; color: #5a687a; font-size: .74rem; font-weight: 900; }
+    .attendance-name { font-size: .79rem; font-weight: 820; line-height: 1.2; overflow-wrap: anywhere; }
+    .attendance-actions { display: flex; gap: 5px; }
+    .presence-btn { border: 1px solid transparent; border-radius: 8px; padding: 7px 8px; font-size: .68rem; font-weight: 850; cursor: pointer; background: #eef2f7; color: #4a596d; white-space: nowrap; }
+    .presence-btn.present.active, .presence-btn.present:hover { background: var(--success); color: white; }
+    .presence-btn.absent.active, .presence-btn.absent:hover { background: var(--danger); color: white; }
+    .presence-btn.excused.active, .presence-btn.excused:hover { background: var(--warning); color: white; }
+    .attendance-empty { padding: 26px; text-align: center; color: var(--muted); font-size: .82rem; }
+
+    .attendance-footer { margin-top: 15px; border-top: 1px solid var(--line); padding-top: 15px; display: flex; align-items: center; justify-content: space-between; gap: 16px; }
+    .attendance-footer-note { color: var(--muted); font-size: .78rem; line-height: 1.35; }
+    .finish-call-btn { border: 0; border-radius: 12px; padding: 14px 20px; background: linear-gradient(135deg, var(--success), #066c4d); color: white; font-weight: 900; cursor: pointer; min-width: 300px; box-shadow: 0 8px 18px rgba(8,127,91,.18); }
+    .finish-call-btn:disabled { opacity: .45; cursor: not-allowed; box-shadow: none; }
+
+    .phase-banner { display: flex; align-items: center; justify-content: space-between; gap: 10px; padding: 10px 13px; margin-bottom: 13px; border: 1px solid #b9dacd; background: #f0faf6; border-radius: 12px; color: #075d43; font-size: .78rem; }
+    .phase-banner strong { font-weight: 900; }
+    .phase-banner button { border: 1px solid #afd3c5; background: white; color: #075d43; border-radius: 8px; padding: 7px 9px; font-weight: 800; font-size: .7rem; cursor: pointer; }
+    .hidden-phase { display: none !important; }
+
+    .call-report { min-height: 380px; white-space: pre-wrap; width: 100%; border: 1px solid var(--line); border-radius: 12px; padding: 15px; background: #fafbfd; color: #222; font-family: Georgia, "Times New Roman", serif; line-height: 1.5; font-size: .94rem; }
+
     @keyframes rise { from { opacity: 0; transform: translateY(7px) scale(.985); } to { opacity: 1; transform: none; } }
     @keyframes pulse { from { opacity: .48; transform: scale(.985); } to { opacity: 1; transform: scale(1.01); } }
 
@@ -439,6 +493,13 @@
       .action-btn.accept { grid-column: auto; }
       .modal { padding: 10px; }
       .modal-body { padding: 12px; }
+      .attendance-head { flex-direction: column; }
+      .attendance-summary { min-width: 0; width: 100%; grid-template-columns: repeat(2, 1fr); }
+      .attendance-groups { grid-template-columns: 1fr; }
+      .attendance-row { grid-template-columns: 30px 1fr; }
+      .attendance-actions { grid-column: 1 / -1; display: grid; grid-template-columns: repeat(3, 1fr); }
+      .attendance-footer { flex-direction: column; align-items: stretch; }
+      .finish-call-btn { min-width: 0; width: 100%; }
     }
 
     @media print {
@@ -459,28 +520,82 @@
           <p>Comarca de Goiatins/TO • Formação do Conselho de Sentença</p>
         </div>
       </div>
-      <div class="header-metrics" aria-label="Resumo da urna">
-        <div class="metric"><small>Titulares</small><strong id="contador-titulares">25</strong></div>
-        <div class="metric"><small>Suplentes</small><strong id="contador-suplentes">10</strong></div>
+      <div class="header-metrics" aria-label="Resumo da sessão">
+        <div class="metric"><small>Presentes</small><strong id="contador-presentes">0</strong></div>
+        <div class="metric"><small>Ausentes</small><strong id="contador-ausentes">0</strong></div>
+        <div class="metric"><small>Dispensados</small><strong id="contador-dispensados">0</strong></div>
         <div class="metric progress"><small>Conselho</small><strong><span id="contador-conselho">0</span>/7</strong></div>
       </div>
     </div>
   </header>
 
   <nav class="toolbar" aria-label="Ferramentas da sessão">
-    <button class="tool-btn" type="button" onclick="desfazerUltimaAcao()" id="btn-desfazer-top">↩ Desfazer</button>
+    <button class="tool-btn" type="button" onclick="abrirChamada()">👥 Chamada dos jurados</button>
+    <button class="tool-btn" type="button" onclick="desfazerUltimaAcao()" id="btn-desfazer-top">↩ Desfazer sorteio</button>
     <button class="tool-btn" type="button" onclick="abrirResumo()">☰ Resumo</button>
     <button class="tool-btn" type="button" onclick="exportarSessao()">⇩ Exportar sessão</button>
     <button class="tool-btn danger" type="button" onclick="reiniciarSessao()">⟳ Nova sessão</button>
   </nav>
 
   <main>
-    <section class="left-column">
+    <!-- ETAPA 1: CHAMADA NOMINAL -->
+    <section class="panel attendance-panel" id="attendance-view" aria-label="Chamada nominal dos jurados">
+      <div class="attendance-head">
+        <div>
+          <div class="step-badge">ETAPA 1 DE 2 • CHAMADA NOMINAL</div>
+          <h2>Conferência dos jurados presentes</h2>
+          <p>Faça a chamada de todos os jurados convocados. Marque cada nome como <strong>Presente</strong>, <strong>Ausente</strong> ou <strong>Dispensado</strong>. Somente os jurados marcados como <strong>Presentes</strong> serão colocados na urna para o sorteio.</p>
+        </div>
+        <div class="attendance-summary" aria-label="Resumo da chamada">
+          <div class="attendance-stat present"><strong id="call-presentes">0</strong><span>Presentes</span></div>
+          <div class="attendance-stat absent"><strong id="call-ausentes">0</strong><span>Ausentes</span></div>
+          <div class="attendance-stat excused"><strong id="call-dispensados">0</strong><span>Dispensados</span></div>
+          <div class="attendance-stat"><strong id="call-pendentes">35</strong><span>Pendentes</span></div>
+        </div>
+      </div>
+
+      <div class="attendance-tools">
+        <input class="attendance-search" id="call-search" type="search" placeholder="Buscar jurado pelo nome..." oninput="renderizarChamada()" autocomplete="off">
+        <select class="attendance-filter" id="call-filter" onchange="renderizarChamada()" aria-label="Filtrar situação">
+          <option value="todos">Todos</option>
+          <option value="pendente">Pendentes</option>
+          <option value="presente">Presentes</option>
+          <option value="ausente">Ausentes</option>
+          <option value="dispensado">Dispensados</option>
+        </select>
+        <button class="mini-btn danger" type="button" onclick="limparChamada()">↺ Limpar marcações</button>
+      </div>
+
+      <div class="attendance-groups">
+        <div class="attendance-group">
+          <div class="attendance-group-head"><strong>Jurados titulares</strong><span>25 convocados</span></div>
+          <div class="attendance-list" id="call-titulares"></div>
+        </div>
+        <div class="attendance-group">
+          <div class="attendance-group-head"><strong>Jurados suplentes</strong><span>10 convocados</span></div>
+          <div class="attendance-list" id="call-suplentes"></div>
+        </div>
+      </div>
+
+      <div class="attendance-footer">
+        <div class="attendance-footer-note" id="call-footer-note"><strong>Conclua a chamada.</strong> O sorteio permanecerá bloqueado enquanto houver jurados sem situação definida.</div>
+        <button class="finish-call-btn" id="btn-finalizar-chamada" type="button" onclick="finalizarChamada()" disabled>✓ FINALIZAR CHAMADA E MONTAR A URNA</button>
+      </div>
+    </section>
+
+    <!-- ETAPA 2: SORTEIO -->
+    <section class="left-column hidden-phase" id="draw-column">
+      <div class="phase-banner">
+        <div><strong>✓ Chamada concluída.</strong> A urna contém somente os jurados presentes.</div>
+        <button type="button" onclick="abrirChamada()">Ver relatório da chamada</button>
+      </div>
+
       <div class="panel draw-panel">
         <div class="stage-top">
           <div class="stage-title">
-            <h2>Sorteio dos jurados</h2>
-            <p>Os titulares são utilizados primeiro; os suplentes entram quando a lista de titulares se esgota.</p>
+            <div class="step-badge">ETAPA 2 DE 2 • SORTEIO</div>
+            <h2>Sorteio dos jurados presentes</h2>
+            <p>Participam do sorteio exclusivamente os jurados classificados como presentes na chamada. Todos os jurados presentes integram uma única urna para o sorteio, preservando-se apenas a identificação de titular ou suplente para registro.</p>
           </div>
           <div class="session-pill" id="session-pill">Sessão iniciada</div>
         </div>
@@ -490,9 +605,7 @@
             <div class="draw-hint" id="draw-hint">Pronto para o próximo sorteio.</div>
             <button class="draw-btn" id="btn-sortear" type="button" onclick="realizarSorteio()">🎲 SORTEAR PRÓXIMO JURADO</button>
           </div>
-
           <div class="rolling" id="rolling">Sorteando de forma aleatória…</div>
-
           <div class="draw-result" id="draw-result">
             <div class="origin-badge titular" id="origin-badge">TITULAR</div>
             <div class="juror-name" id="nome-sorteado"></div>
@@ -504,49 +617,40 @@
           <p class="action-title">Registrar resultado do jurado sorteado</p>
           <div class="action-grid">
             <button class="action-btn accept" type="button" onclick="registrarAcao('aceito')">✓ ACEITAR NO CONSELHO</button>
-            <button class="action-btn reject" id="btn-mp" type="button" onclick="registrarAcao('recusa_mp')">✕ RECUSA • MP<span class="subcounter" id="count-mp">0/3</span></button>
             <button class="action-btn reject" id="btn-def" type="button" onclick="registrarAcao('recusa_def')">✕ RECUSA • DEFESA<span class="subcounter" id="count-def">0/3</span></button>
-            <button class="action-btn neutral" type="button" onclick="registrarAcao('impedido')">⚠ IMPEDIDO / AUSENTE</button>
+            <button class="action-btn reject" id="btn-mp" type="button" onclick="registrarAcao('recusa_mp')">✕ RECUSA • MP<span class="subcounter" id="count-mp">0/3</span></button>
+            <button class="action-btn neutral" type="button" onclick="registrarAcao('impedido')">⚠ IMPEDIDO</button>
             <button class="action-btn warning" type="button" onclick="registrarAcao('suspenso')">Ⅱ SUSPENSO</button>
           </div>
         </div>
 
-        <div class="status-strip" aria-label="Ocorrências registradas">
+        <div class="status-strip" aria-label="Ocorrências registradas no sorteio">
           <div class="status-card"><strong id="status-aceitos">0</strong><span>Aceitos</span></div>
           <div class="status-card"><strong id="status-mp">0</strong><span>Recusas MP</span></div>
           <div class="status-card"><strong id="status-def">0</strong><span>Recusas Defesa</span></div>
-          <div class="status-card"><strong id="status-imp">0</strong><span>Imped./Aus.</span></div>
+          <div class="status-card"><strong id="status-imp">0</strong><span>Impedidos</span></div>
           <div class="status-card"><strong id="status-susp">0</strong><span>Suspensos</span></div>
         </div>
 
-        <div class="kbd-help">Atalhos: <kbd>Espaço</kbd> sortear • <kbd>A</kbd> aceitar • <kbd>M</kbd> MP • <kbd>D</kbd> defesa • <kbd>I</kbd> impedido/ausente • <kbd>S</kbd> suspenso • <kbd>Ctrl</kbd>+<kbd>Z</kbd> desfazer</div>
+        <div class="kbd-help">Atalhos no sorteio: <kbd>Espaço</kbd> sortear • <kbd>A</kbd> aceitar • <kbd>M</kbd> MP • <kbd>D</kbd> defesa • <kbd>I</kbd> impedido • <kbd>S</kbd> suspenso • <kbd>Ctrl</kbd>+<kbd>Z</kbd> desfazer</div>
       </div>
 
       <div class="panel history-panel">
-        <div class="panel-heading">
-          <h3>Histórico da sessão</h3>
-          <span id="history-count">0 registros</span>
-        </div>
+        <div class="panel-heading"><h3>Histórico do sorteio</h3><span id="history-count">0 registros</span></div>
         <div class="timeline" id="timeline"></div>
       </div>
     </section>
 
-    <aside class="panel council-panel" aria-label="Conselho de Sentença">
+    <aside class="panel council-panel hidden-phase" id="council-panel" aria-label="Conselho de Sentença">
       <div class="council-head">
-        <div>
-          <h2>Conselho de Sentença</h2>
-          <p>7 jurados aceitos</p>
-        </div>
+        <div><h2>Conselho de Sentença</h2><p>7 jurados aceitos</p></div>
         <button class="undo-btn" type="button" onclick="desfazerUltimaAcao()" id="btn-desfazer">↩ Desfazer</button>
       </div>
-
       <div class="progress-wrap">
         <div class="progress-line"><div class="progress-fill" id="progress-fill"></div></div>
         <div class="progress-label"><span>Formação do Conselho</span><strong id="progress-text">0 de 7</strong></div>
       </div>
-
       <div class="seat-list" id="lista-cadeiras"></div>
-
       <div class="final-box" id="painel-final">
         <div class="done">✓ Conselho de Sentença completo</div>
         <div class="final-grid">
@@ -593,6 +697,24 @@
   </div>
 </div>
 
+
+<div class="modal" id="modal-chamada" role="dialog" aria-modal="true" aria-labelledby="chamada-title">
+  <div class="modal-card">
+    <div class="modal-head">
+      <h3 id="chamada-title">Chamada nominal dos jurados</h3>
+      <button class="modal-close" type="button" onclick="fecharChamada()" aria-label="Fechar">×</button>
+    </div>
+    <div class="modal-body">
+      <div class="call-report" id="texto-chamada"></div>
+    </div>
+    <div class="modal-foot">
+      <button class="tool-btn" id="btn-reabrir-chamada" type="button" onclick="reabrirChamada()">↺ Reabrir chamada</button>
+      <button class="tool-btn" type="button" onclick="copiarChamada()">📋 Copiar chamada</button>
+      <button class="tool-btn" type="button" onclick="fecharChamada()">Fechar</button>
+    </div>
+  </div>
+</div>
+
 <div class="toast" id="toast" role="status" aria-live="polite"></div>
 <pre class="print-only" id="print-area"></pre>
 
@@ -600,9 +722,10 @@
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'urna-juri-goiatins-v2';
+  const STORAGE_KEY = 'urna-juri-goiatins-chamada-v3';
   const MAX_RECUSAS = 3;
   const TOTAL_CONSELHO = 7;
+  const MIN_PRESENTES_INSTALACAO = 15;
 
   const TITULARES_INICIAIS = [
     "ÉLIDA FERREIRA CARVALHO", "RITA SOARES BRANDÃO ARAUJO", "KATIANE FERREIRA DIAS",
@@ -623,10 +746,20 @@
     "GUSTAVO CARVALHO CAMPOS"
   ];
 
+  const TODOS = [...TITULARES_INICIAIS, ...SUPLENTES_INICIAIS];
+
+  function mapaPresencasVazio() {
+    return Object.fromEntries(TODOS.map(nome => [nome, 'pendente']));
+  }
+
   function novoEstado() {
     return {
-      titulares: [...TITULARES_INICIAIS],
-      suplentes: [...SUPLENTES_INICIAIS],
+      fase: 'chamada',
+      chamadaFinalizada: false,
+      chamadaFinalizadaEm: null,
+      presencas: mapaPresencasVazio(),
+      titulares: [],
+      suplentes: [],
       conselho: [],
       recusasMP: [],
       recusasDefesa: [],
@@ -642,7 +775,6 @@
 
   let state = carregarEstado() || novoEstado();
   let sorteando = false;
-  let tipoDocumentoAtual = 'ata';
   let toastTimer;
 
   function $(id) { return document.getElementById(id); }
@@ -654,19 +786,40 @@
       const parsed = JSON.parse(salvo);
       const requiredArrays = ['titulares','suplentes','conselho','recusasMP','recusasDefesa','impedidos','suspensos','historicoAcoes'];
       if (!requiredArrays.every(k => Array.isArray(parsed[k]))) return null;
-      return { ...novoEstado(), ...parsed };
-    } catch (_) {
-      return null;
-    }
+      const base = novoEstado();
+      const merged = { ...base, ...parsed };
+      merged.presencas = { ...mapaPresencasVazio(), ...(parsed.presencas || {}) };
+      return merged;
+    } catch (_) { return null; }
   }
 
   function salvarEstado() {
     try {
       state.ultimaAtualizacao = new Date().toISOString();
       localStorage.setItem(STORAGE_KEY, JSON.stringify(state));
-    } catch (_) {
-      // O funcionamento da urna não depende do armazenamento local.
-    }
+    } catch (_) {}
+  }
+
+  function escapeHtml(value) {
+    return String(value).replaceAll('&','&amp;').replaceAll('<','&lt;').replaceAll('>','&gt;').replaceAll('"','&quot;').replaceAll("'",'&#039;');
+  }
+
+  function normalizar(value) {
+    return String(value || '').normalize('NFD').replace(/[\u0300-\u036f]/g, '').toLowerCase();
+  }
+
+  function hora(iso = new Date().toISOString()) {
+    return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  }
+
+  function dataHora(iso) { return iso ? new Date(iso).toLocaleString('pt-BR') : '-'; }
+
+  function toast(msg) {
+    const el = $('toast');
+    el.textContent = msg;
+    el.classList.add('show');
+    clearTimeout(toastTimer);
+    toastTimer = setTimeout(() => el.classList.remove('show'), 2400);
   }
 
   function randomIndex(maxExclusive) {
@@ -676,33 +829,180 @@
       const limit = Math.floor(range / maxExclusive) * maxExclusive;
       const buffer = new Uint32Array(1);
       let value;
-      do {
-        crypto.getRandomValues(buffer);
-        value = buffer[0];
-      } while (value >= limit);
+      do { crypto.getRandomValues(buffer); value = buffer[0]; } while (value >= limit);
       return value % maxExclusive;
     }
     return Math.floor(Math.random() * maxExclusive);
   }
 
-  function hora(iso = new Date().toISOString()) {
-    return new Date(iso).toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit', second: '2-digit' });
+  function contagemChamada() {
+    const vals = TODOS.map(nome => state.presencas[nome] || 'pendente');
+    return {
+      presente: vals.filter(v => v === 'presente').length,
+      ausente: vals.filter(v => v === 'ausente').length,
+      dispensado: vals.filter(v => v === 'dispensado').length,
+      pendente: vals.filter(v => v === 'pendente').length
+    };
   }
 
-  function dataHora(iso) {
-    return new Date(iso).toLocaleString('pt-BR');
+  function origemDe(nome) { return TITULARES_INICIAIS.includes(nome) ? 'titular' : 'suplente'; }
+
+  window.marcarPresenca = function marcarPresenca(nome, status) {
+    if (state.chamadaFinalizada) return toast('A chamada já foi finalizada. Reabra a chamada antes de alterá-la.');
+    if (!TODOS.includes(nome) || !['presente','ausente','dispensado','pendente'].includes(status)) return;
+    state.presencas[nome] = status;
+    renderizarChamada();
+    atualizarInterface();
+  };
+
+  window.marcarPendentes = function marcarPendentes(status) {
+    if (state.chamadaFinalizada) return;
+    const qtd = contagemChamada().pendente;
+    if (!qtd) return toast('Não há jurados pendentes.');
+    if (!confirm(`Marcar os ${qtd} jurados ainda pendentes como PRESENTES?`)) return;
+    TODOS.forEach(nome => { if ((state.presencas[nome] || 'pendente') === 'pendente') state.presencas[nome] = status; });
+    renderizarChamada();
+    atualizarInterface();
+    toast('Pendentes marcados como presentes.');
+  };
+
+  window.limparChamada = function limparChamada() {
+    if (state.chamadaFinalizada) return toast('Reabra a chamada antes de limpar as marcações.');
+    if (!confirm('Limpar todas as marcações da chamada?')) return;
+    state.presencas = mapaPresencasVazio();
+    $('call-search').value = '';
+    $('call-filter').value = 'todos';
+    renderizarChamada();
+    atualizarInterface();
+  };
+
+  function renderGrupo(lista, containerId, offset) {
+    const container = $(containerId);
+    const termo = normalizar($('call-search')?.value || '');
+    const filtro = $('call-filter')?.value || 'todos';
+    const filtrados = lista.map((nome, idx) => ({ nome, idx: idx + offset })).filter(({nome}) => {
+      const status = state.presencas[nome] || 'pendente';
+      return (!termo || normalizar(nome).includes(termo)) && (filtro === 'todos' || status === filtro);
+    });
+    if (!filtrados.length) {
+      container.innerHTML = '<div class="attendance-empty">Nenhum jurado corresponde ao filtro.</div>';
+      return;
+    }
+    container.innerHTML = filtrados.map(({nome, idx}) => {
+      const status = state.presencas[nome] || 'pendente';
+      return `<div class="attendance-row" data-status="${status}">
+        <div class="attendance-number">${idx + 1}</div>
+        <div class="attendance-name">${escapeHtml(nome)}</div>
+        <div class="attendance-actions">
+          <button type="button" class="presence-btn present ${status === 'presente' ? 'active' : ''}" onclick='marcarPresenca(${JSON.stringify(nome)}, "presente")'>✓ Presente</button>
+          <button type="button" class="presence-btn absent ${status === 'ausente' ? 'active' : ''}" onclick='marcarPresenca(${JSON.stringify(nome)}, "ausente")'>✕ Ausente</button>
+          <button type="button" class="presence-btn excused ${status === 'dispensado' ? 'active' : ''}" onclick='marcarPresenca(${JSON.stringify(nome)}, "dispensado")'>○ Dispensado</button>
+        </div>
+      </div>`;
+    }).join('');
   }
+
+  window.renderizarChamada = function renderizarChamada() {
+    renderGrupo(TITULARES_INICIAIS, 'call-titulares', 0);
+    renderGrupo(SUPLENTES_INICIAIS, 'call-suplentes', TITULARES_INICIAIS.length);
+    const c = contagemChamada();
+    $('call-presentes').textContent = c.presente;
+    $('call-ausentes').textContent = c.ausente;
+    $('call-dispensados').textContent = c.dispensado;
+    $('call-pendentes').textContent = c.pendente;
+    $('btn-finalizar-chamada').disabled = c.pendente > 0 || c.presente < MIN_PRESENTES_INSTALACAO;
+    if (c.pendente > 0) {
+      $('call-footer-note').innerHTML = `<strong>Faltam ${c.pendente} marcações.</strong> Defina a situação de todos os jurados para liberar o sorteio.`;
+    } else if (c.presente < MIN_PRESENTES_INSTALACAO) {
+      $('call-footer-note').innerHTML = `<strong>Apenas ${c.presente} jurados presentes.</strong> São necessários pelo menos ${MIN_PRESENTES_INSTALACAO} jurados presentes para a instalação dos trabalhos.`;
+    } else {
+      $('call-footer-note').innerHTML = `<strong>Chamada completa.</strong> ${c.presente} presentes serão incluídos na urna; ${c.ausente} ausentes e ${c.dispensado} dispensados ficarão excluídos do sorteio.`;
+    }
+  };
+
+  window.finalizarChamada = function finalizarChamada() {
+    const c = contagemChamada();
+    if (c.pendente) return toast('Ainda existem jurados sem situação definida.');
+    if (c.presente < MIN_PRESENTES_INSTALACAO) return toast(`São necessários pelo menos ${MIN_PRESENTES_INSTALACAO} jurados presentes para instalar os trabalhos.`);
+    const msg = `Finalizar a chamada?\n\nPresentes: ${c.presente}\nAusentes: ${c.ausente}\nDispensados: ${c.dispensado}\n\nSomente os presentes serão incluídos na urna.`;
+    if (!confirm(msg)) return;
+    state.titulares = TITULARES_INICIAIS.filter(nome => state.presencas[nome] === 'presente');
+    state.suplentes = SUPLENTES_INICIAIS.filter(nome => state.presencas[nome] === 'presente');
+    state.chamadaFinalizada = true;
+    state.chamadaFinalizadaEm = new Date().toISOString();
+    state.fase = 'sorteio';
+    atualizarInterface();
+    toast(`Chamada finalizada: ${c.presente} jurados presentes na urna.`);
+  };
+
+  function sorteioJaIniciado() {
+    return !!state.juradoAtual || state.historicoAcoes.length > 0 || state.conselho.length > 0 || state.recusasMP.length > 0 || state.recusasDefesa.length > 0 || state.impedidos.length > 0 || state.suspensos.length > 0;
+  }
+
+  window.reabrirChamada = function reabrirChamada() {
+    if (!state.chamadaFinalizada) { fecharChamada(); return; }
+    if (sorteioJaIniciado()) return toast('A chamada não pode ser alterada depois de iniciado o sorteio. Inicie uma nova sessão para refazê-la.');
+    if (!confirm('Reabrir a chamada? A urna montada será descartada até que a chamada seja finalizada novamente.')) return;
+    state.chamadaFinalizada = false;
+    state.chamadaFinalizadaEm = null;
+    state.fase = 'chamada';
+    state.titulares = [];
+    state.suplentes = [];
+    fecharChamada();
+    atualizarInterface();
+  };
+
+  function gerarTextoChamada() {
+    const presentesT = TITULARES_INICIAIS.filter(n => state.presencas[n] === 'presente');
+    const presentesS = SUPLENTES_INICIAIS.filter(n => state.presencas[n] === 'presente');
+    const ausentes = TODOS.filter(n => state.presencas[n] === 'ausente');
+    const dispensados = TODOS.filter(n => state.presencas[n] === 'dispensado');
+    const pendentes = TODOS.filter(n => (state.presencas[n] || 'pendente') === 'pendente');
+    const c = contagemChamada();
+    const linhas = [
+      'CHAMADA NOMINAL DOS JURADOS — COMARCA DE GOIATINS/TO',
+      `Situação: ${state.chamadaFinalizada ? 'FINALIZADA' : 'EM ANDAMENTO'}`,
+      state.chamadaFinalizadaEm ? `Finalizada em: ${dataHora(state.chamadaFinalizadaEm)}` : '',
+      '',
+      `Presentes: ${c.presente} | Ausentes: ${c.ausente} | Dispensados: ${c.dispensado} | Pendentes: ${c.pendente}`,
+      '',
+      `PRESENTES — TITULARES (${presentesT.length})`,
+      ...presentesT.map((n,i) => `${i+1}. ${n}`),
+      '',
+      `PRESENTES — SUPLENTES (${presentesS.length})`,
+      ...presentesS.map((n,i) => `${i+1}. ${n}`),
+      '',
+      `AUSENTES (${ausentes.length})`,
+      ...(ausentes.length ? ausentes.map((n,i) => `${i+1}. ${n}`) : ['Nenhum.']),
+      '',
+      `DISPENSADOS (${dispensados.length})`,
+      ...(dispensados.length ? dispensados.map((n,i) => `${i+1}. ${n}`) : ['Nenhum.'])
+    ];
+    if (pendentes.length) linhas.push('', `PENDENTES (${pendentes.length})`, ...pendentes.map((n,i) => `${i+1}. ${n}`));
+    return linhas.filter((x, i, arr) => x !== '' || i === 0 || arr[i-1] !== '').join('\n');
+  }
+
+  window.abrirChamada = function abrirChamada() {
+    if (!state.chamadaFinalizada) {
+      state.fase = 'chamada';
+      atualizarInterface();
+      return;
+    }
+    $('texto-chamada').textContent = gerarTextoChamada();
+    $('btn-reabrir-chamada').disabled = sorteioJaIniciado();
+    $('btn-reabrir-chamada').title = sorteioJaIniciado() ? 'Indisponível após o início do sorteio.' : 'Reabrir e alterar a chamada.';
+    $('modal-chamada').classList.add('show');
+  };
+  window.fecharChamada = function fecharChamada() { $('modal-chamada').classList.remove('show'); };
+  window.copiarChamada = async function copiarChamada() {
+    const texto = gerarTextoChamada();
+    try { await navigator.clipboard.writeText(texto); toast('Relatório da chamada copiado.'); }
+    catch (_) { toast('Não foi possível copiar automaticamente.'); }
+  };
 
   function acaoLabel(acao) {
-    return {
-      aceito: 'ACEITO',
-      recusa_mp: 'RECUSA MP',
-      recusa_def: 'RECUSA DEFESA',
-      impedido: 'IMPEDIDO/AUSENTE',
-      suspenso: 'SUSPENSO'
-    }[acao] || acao;
+    return { aceito:'ACEITO', recusa_mp:'RECUSA MP', recusa_def:'RECUSA DEFESA', impedido:'IMPEDIDO', suspenso:'SUSPENSO' }[acao] || acao;
   }
-
   function tagClass(acao) {
     if (acao === 'aceito') return 'tag-ok';
     if (acao === 'recusa_mp' || acao === 'recusa_def') return 'tag-no';
@@ -710,18 +1010,20 @@
     return 'tag-neutral';
   }
 
-  function toast(msg) {
-    const el = $('toast');
-    el.textContent = msg;
-    el.classList.add('show');
-    clearTimeout(toastTimer);
-    toastTimer = setTimeout(() => el.classList.remove('show'), 2300);
-  }
-
   function atualizarInterface() {
-    $('contador-titulares').textContent = state.titulares.length;
-    $('contador-suplentes').textContent = state.suplentes.length;
+    const c = contagemChamada();
+    $('contador-presentes').textContent = c.presente;
+    $('contador-ausentes').textContent = c.ausente;
+    $('contador-dispensados').textContent = c.dispensado;
     $('contador-conselho').textContent = state.conselho.length;
+
+    const naChamada = !state.chamadaFinalizada || state.fase === 'chamada';
+    $('attendance-view').classList.toggle('hidden-phase', !naChamada);
+    $('draw-column').classList.toggle('hidden-phase', naChamada);
+    $('council-panel').classList.toggle('hidden-phase', naChamada);
+
+    if (naChamada) renderizarChamada();
+
     $('count-mp').textContent = `${state.recusasMP.length}/${MAX_RECUSAS}`;
     $('count-def').textContent = `${state.recusasDefesa.length}/${MAX_RECUSAS}`;
     $('status-aceitos').textContent = state.conselho.length;
@@ -729,24 +1031,22 @@
     $('status-def').textContent = state.recusasDefesa.length;
     $('status-imp').textContent = state.impedidos.length;
     $('status-susp').textContent = state.suspensos.length;
-
     $('btn-mp').disabled = state.recusasMP.length >= MAX_RECUSAS;
     $('btn-def').disabled = state.recusasDefesa.length >= MAX_RECUSAS;
 
     const percentual = Math.min(100, (state.conselho.length / TOTAL_CONSELHO) * 100);
     $('progress-fill').style.width = `${percentual}%`;
     $('progress-text').textContent = `${state.conselho.length} de ${TOTAL_CONSELHO}`;
-
     const acabou = state.conselho.length >= TOTAL_CONSELHO;
-    $('btn-sortear').disabled = sorteando || !!state.juradoAtual || acabou || (state.titulares.length === 0 && state.suplentes.length === 0);
+    $('btn-sortear').disabled = !state.chamadaFinalizada || sorteando || !!state.juradoAtual || acabou || (state.titulares.length === 0 && state.suplentes.length === 0);
     $('painel-final').classList.toggle('show', acabou);
 
-    const podeDesfazer = state.historicoAcoes.length > 0 || !!state.juradoAtual;
+    const podeDesfazer = state.chamadaFinalizada && (state.historicoAcoes.length > 0 || !!state.juradoAtual);
     $('btn-desfazer').disabled = !podeDesfazer;
     $('btn-desfazer-top').disabled = !podeDesfazer;
 
     const start = new Date(state.iniciouEm);
-    $('session-pill').textContent = `Sessão • ${start.toLocaleDateString('pt-BR')} ${start.toLocaleTimeString('pt-BR', {hour:'2-digit', minute:'2-digit'})}`;
+    $('session-pill').textContent = `Sessão • ${start.toLocaleDateString('pt-BR')} ${start.toLocaleTimeString('pt-BR',{hour:'2-digit',minute:'2-digit'})}`;
 
     renderizarCadeiras();
     renderizarHistorico();
@@ -760,19 +1060,18 @@
     $('rolling').classList.toggle('show', sorteando);
     $('draw-result').classList.toggle('show', hasCurrent && !sorteando);
     $('painel-acoes').classList.toggle('show', hasCurrent && !sorteando && state.conselho.length < TOTAL_CONSELHO);
-
     if (hasCurrent) {
       $('nome-sorteado').textContent = state.juradoAtual;
       $('origin-badge').textContent = state.origemJuradoAtual === 'titular' ? 'TITULAR' : 'SUPLENTE';
       $('origin-badge').className = `origin-badge ${state.origemJuradoAtual}`;
     }
-
     if (state.conselho.length >= TOTAL_CONSELHO) {
       $('draw-initial').style.display = 'block';
       $('draw-hint').textContent = 'Conselho de Sentença completo.';
       $('btn-sortear').textContent = '✓ SORTEIO CONCLUÍDO';
     } else if (!hasCurrent && !sorteando) {
-      $('draw-hint').textContent = 'Pronto para o próximo sorteio.';
+      const restantes = state.titulares.length + state.suplentes.length;
+      $('draw-hint').textContent = `${restantes} jurado(s) presente(s) ainda disponível(is) na urna.`;
       $('btn-sortear').textContent = '🎲 SORTEAR PRÓXIMO JURADO';
     }
   }
@@ -780,58 +1079,38 @@
   function renderizarCadeiras() {
     const lista = $('lista-cadeiras');
     lista.innerHTML = '';
-    for (let i = 0; i < TOTAL_CONSELHO; i++) {
+    for (let i=0; i<TOTAL_CONSELHO; i++) {
       const nome = state.conselho[i];
       const seat = document.createElement('div');
       seat.className = `seat${nome ? ' filled' : ''}`;
-      seat.innerHTML = `
-        <div class="seat-number">${i + 1}</div>
-        <div class="${nome ? 'seat-name' : 'seat-empty'}">${nome ? escapeHtml(nome) : 'Aguardando jurado aceito…'}</div>`;
+      seat.innerHTML = `<div class="seat-number">${i+1}</div><div class="${nome ? 'seat-name' : 'seat-empty'}">${nome ? escapeHtml(nome) : 'Aguardando jurado aceito…'}</div>`;
       lista.appendChild(seat);
     }
   }
 
   function renderizarHistorico() {
-    const timeline = $('timeline');
     const itens = state.historicoAcoes;
     $('history-count').textContent = `${itens.length} ${itens.length === 1 ? 'registro' : 'registros'}`;
-    if (!itens.length) {
-      timeline.innerHTML = '<div class="timeline-empty">Nenhuma ocorrência registrada ainda.</div>';
-      return;
-    }
-    timeline.innerHTML = itens.slice().reverse().map(item => `
-      <div class="timeline-item">
-        <span class="timeline-time">${hora(item.em)}</span>
-        <strong>${escapeHtml(item.jurado)}</strong>
-        <span class="timeline-tag ${tagClass(item.acao)}">${acaoLabel(item.acao)}</span>
-      </div>`).join('');
-  }
-
-  function escapeHtml(value) {
-    return String(value)
-      .replaceAll('&', '&amp;')
-      .replaceAll('<', '&lt;')
-      .replaceAll('>', '&gt;')
-      .replaceAll('"', '&quot;')
-      .replaceAll("'", '&#039;');
+    if (!itens.length) { $('timeline').innerHTML = '<div class="timeline-empty">Nenhuma ocorrência registrada ainda.</div>'; return; }
+    $('timeline').innerHTML = itens.slice().reverse().map(item => `<div class="timeline-item"><span class="timeline-time">${hora(item.em)}</span><strong>${escapeHtml(item.jurado)}</strong><span class="timeline-tag ${tagClass(item.acao)}">${acaoLabel(item.acao)}</span></div>`).join('');
   }
 
   window.realizarSorteio = function realizarSorteio() {
+    if (!state.chamadaFinalizada) return toast('Finalize a chamada antes de iniciar o sorteio.');
     if (sorteando || state.juradoAtual || state.conselho.length >= TOTAL_CONSELHO) return;
-    if (state.titulares.length === 0 && state.suplentes.length === 0) {
-      alert('A urna está vazia. Não há mais jurados disponíveis.');
-      return;
-    }
-
-    sorteando = true;
-    atualizarInterface();
-
-    window.setTimeout(() => {
-      const lista = state.titulares.length > 0 ? state.titulares : state.suplentes;
-      state.origemJuradoAtual = state.titulares.length > 0 ? 'titular' : 'suplente';
-      const idx = randomIndex(lista.length);
-      state.juradoAtual = lista[idx];
-      lista.splice(idx, 1);
+    if (!state.titulares.length && !state.suplentes.length) return alert('A urna está vazia. Não há mais jurados presentes disponíveis.');
+    sorteando = true; atualizarInterface();
+    setTimeout(() => {
+      const disponiveis = [
+        ...state.titulares.map(nome => ({ nome, origem: 'titular' })),
+        ...state.suplentes.map(nome => ({ nome, origem: 'suplente' }))
+      ];
+      const escolhido = disponiveis[randomIndex(disponiveis.length)];
+      state.juradoAtual = escolhido.nome;
+      state.origemJuradoAtual = escolhido.origem;
+      const listaOrigem = escolhido.origem === 'titular' ? state.titulares : state.suplentes;
+      const pos = listaOrigem.indexOf(escolhido.nome);
+      if (pos >= 0) listaOrigem.splice(pos, 1);
       sorteando = false;
       atualizarInterface();
     }, 850);
@@ -841,26 +1120,15 @@
     if (!state.juradoAtual || sorteando) return;
     if (acao === 'recusa_mp' && state.recusasMP.length >= MAX_RECUSAS) return toast('Limite de recusas do Ministério Público atingido.');
     if (acao === 'recusa_def' && state.recusasDefesa.length >= MAX_RECUSAS) return toast('Limite de recusas da Defesa atingido.');
-    if (acao === 'aceito' && state.conselho.length >= TOTAL_CONSELHO) return;
-
-    const registro = {
-      jurado: state.juradoAtual,
-      acao,
-      origem: state.origemJuradoAtual,
-      em: new Date().toISOString()
-    };
-
+    const registro = { jurado:state.juradoAtual, acao, origem:state.origemJuradoAtual, em:new Date().toISOString() };
     state.historicoAcoes.push(registro);
     if (acao === 'aceito') state.conselho.push(state.juradoAtual);
     else if (acao === 'recusa_mp') state.recusasMP.push(state.juradoAtual);
     else if (acao === 'recusa_def') state.recusasDefesa.push(state.juradoAtual);
     else if (acao === 'impedido') state.impedidos.push(state.juradoAtual);
     else if (acao === 'suspenso') state.suspensos.push(state.juradoAtual);
-
-    state.juradoAtual = null;
-    state.origemJuradoAtual = null;
+    state.juradoAtual = null; state.origemJuradoAtual = null;
     atualizarInterface();
-
     if (state.conselho.length === TOTAL_CONSELHO) toast('Conselho de Sentença completo.');
   };
 
@@ -870,179 +1138,115 @@
   }
 
   window.desfazerUltimaAcao = function desfazerUltimaAcao() {
-    if (sorteando) return;
-
+    if (!state.chamadaFinalizada || sorteando) return;
     if (state.juradoAtual) {
       devolverParaUrna(state.juradoAtual, state.origemJuradoAtual);
-      state.juradoAtual = null;
-      state.origemJuradoAtual = null;
-      atualizarInterface();
-      toast('Sorteio atual devolvido à urna.');
-      return;
+      state.juradoAtual = null; state.origemJuradoAtual = null;
+      atualizarInterface(); return toast('Sorteio atual devolvido à urna.');
     }
-
     if (!state.historicoAcoes.length) return toast('Não há ação para desfazer.');
     const ultima = state.historicoAcoes.pop();
-
-    const map = {
-      aceito: state.conselho,
-      recusa_mp: state.recusasMP,
-      recusa_def: state.recusasDefesa,
-      impedido: state.impedidos,
-      suspenso: state.suspensos
-    };
+    const map = { aceito:state.conselho, recusa_mp:state.recusasMP, recusa_def:state.recusasDefesa, impedido:state.impedidos, suspenso:state.suspensos };
     const target = map[ultima.acao];
-    if (target) {
-      const pos = target.lastIndexOf(ultima.jurado);
-      if (pos >= 0) target.splice(pos, 1);
-    }
-
+    if (target) { const pos = target.lastIndexOf(ultima.jurado); if (pos >= 0) target.splice(pos,1); }
     devolverParaUrna(ultima.jurado, ultima.origem);
-    atualizarInterface();
-    toast('Última ação desfeita.');
+    atualizarInterface(); toast('Última ação do sorteio desfeita.');
   };
 
   function gerarTextoAta() {
-    let texto = 'IV - DA FORMAÇÃO DO CONSELHO DE SENTENÇA\n';
+    const c = contagemChamada();
+    let texto = 'IV - DA CHAMADA E DA FORMAÇÃO DO CONSELHO DE SENTENÇA\n';
+    texto += `Realizada a chamada nominal dos jurados convocados, registraram-se ${c.presente} presente(s), ${c.ausente} ausente(s) e ${c.dispensado} dispensado(s). Os ausentes e dispensados foram excluídos da urna, prosseguindo-se ao sorteio exclusivamente entre os jurados presentes, cujas cédulas passaram a compor a urna de sorteio.\n\n`;
     texto += 'Ato contínuo, o MM. Juiz Presidente procedeu ao sorteio eletrônico para a formação do Conselho de Sentença, sendo sorteados e ACEITOS os seguintes jurados:\n\n';
-    state.conselho.forEach((nome, i) => { texto += `${i + 1}. ${nome}\n`; });
-
+    state.conselho.forEach((nome,i) => { texto += `${i+1}. ${nome}\n`; });
     if (state.recusasMP.length || state.recusasDefesa.length || state.impedidos.length || state.suspensos.length) {
       texto += '\nOCORRÊNCIAS DO SORTEIO:\n';
-      if (state.recusasMP.length) texto += `- Houve recusa peremptória por parte do Ministério Público em relação ao(s) jurado(s): ${state.recusasMP.join(', ')}.\n`;
-      if (state.recusasDefesa.length) texto += `- Houve recusa peremptória por parte da Defesa em relação ao(s) jurado(s): ${state.recusasDefesa.join(', ')}.\n`;
-      if (state.impedidos.length) texto += `- Foram registrados como impedidos ou ausentes o(s) jurado(s): ${state.impedidos.join(', ')}.\n`;
-      if (state.suspensos.length) texto += `- O(s) seguinte(s) jurado(s) foi(ram) registrado(s) como suspenso(s): ${state.suspensos.join(', ')}.\n`;
+      if (state.recusasMP.length) texto += `- Recusa peremptória do Ministério Público: ${state.recusasMP.join(', ')}.\n`;
+      if (state.recusasDefesa.length) texto += `- Recusa peremptória da Defesa: ${state.recusasDefesa.join(', ')}.\n`;
+      if (state.impedidos.length) texto += `- Jurado(s) registrado(s) como impedido(s): ${state.impedidos.join(', ')}.\n`;
+      if (state.suspensos.length) texto += `- Jurado(s) registrado(s) como suspenso(s): ${state.suspensos.join(', ')}.\n`;
     }
-
     texto += '\nV - DO COMPROMISSO E DA INCOMUNICABILIDADE DOS JURADOS\n';
     texto += 'Formado o Conselho de Sentença, o MM. Juiz Presidente, levantando-se, e com ele todos os presentes, fez aos jurados a seguinte exortação: “Em nome da lei, concito-vos a examinar esta causa com imparcialidade e a proferir a vossa decisão de acordo com a vossa consciência e os ditames da justiça”. Em seguida, chamados nominalmente, cada um dos jurados respondeu: “Assim o prometo”, conforme preceitua o art. 472 do Código de Processo Penal.\n\n';
-    texto += 'Ato contínuo, o MM. Juiz Presidente ADVERTIU os jurados sorteados sobre a INCOMUNICABILIDADE, nos termos do art. 466, § 1º e § 2º, do CPP, alertando-os de que não poderão comunicar-se entre si ou com outrem sobre o mérito do processo, nem manifestar sua opinião sobre o caso, sob pena de exclusão do Conselho e multa. Em seguida, entregou-lhes cópias da pronúncia e do relatório do processo.';
+    texto += 'Ato contínuo, o MM. Juiz Presidente advertiu os jurados sorteados sobre a incomunicabilidade, nos termos do art. 466, § 1º e § 2º, do CPP.';
     return texto;
   }
 
   function gerarTextoCompromisso() {
     const dataAtual = new Date().toLocaleDateString('pt-BR');
-    let texto = 'ESTADO DO TOCANTINS\nPODER JUDICIÁRIO\nCOMARCA DE GOIATINS - TRIBUNAL DO JÚRI\n\n';
-    texto += 'TERMO DE COMPROMISSO E INCOMUNICABILIDADE DOS JURADOS\n\n';
+    let texto = 'ESTADO DO TOCANTINS\nPODER JUDICIÁRIO\nCOMARCA DE GOIATINS - TRIBUNAL DO JÚRI\n\nTERMO DE COMPROMISSO E INCOMUNICABILIDADE DOS JURADOS\n\n';
     texto += `Aos ${dataAtual}, no Plenário do Tribunal do Júri da Comarca de Goiatins/TO, presente o MM. Juiz de Direito Presidente, Dr. HERISBERTO E SILVA FURTADO CALDAS, formou-se o Conselho de Sentença.\n\n`;
-    texto += 'O MM. Juiz Presidente, levantando-se, e com ele todos os presentes, fez aos jurados a seguinte exortação: “Em nome da lei, concito-vos a examinar esta causa com imparcialidade e a proferir a vossa decisão de acordo com a vossa consciência e os ditames da justiça”.\n\n';
-    texto += 'Em seguida, chamados nominalmente, cada um dos jurados respondeu: “Assim o prometo”, conforme preceitua o art. 472 do Código de Processo Penal. Foram também advertidos sobre a INCOMUNICABILIDADE (art. 466 do CPP), não podendo comunicar-se entre si ou com outrem sobre o mérito do processo.\n\n';
-    texto += 'CONSELHO DE SENTENÇA:\n\n';
-    state.conselho.forEach((nome, i) => {
-      texto += `${i + 1}. ${nome}\nAssinatura: ______________________________________________________\n\n`;
-    });
+    texto += 'O MM. Juiz Presidente fez aos jurados a exortação prevista no art. 472 do Código de Processo Penal, tendo cada jurado respondido: “Assim o prometo”. Foram também advertidos sobre a incomunicabilidade.\n\nCONSELHO DE SENTENÇA:\n\n';
+    state.conselho.forEach((nome,i) => { texto += `${i+1}. ${nome}\nAssinatura: ______________________________________________________\n\n`; });
     texto += '\n______________________________________________________\nHERISBERTO E SILVA FURTADO CALDAS\nJuiz de Direito - Presidente do Tribunal do Júri';
     return texto;
   }
 
   function gerarResumo() {
+    const c = contagemChamada();
     const linhas = [
-      'RESUMO DA SESSÃO DE SORTEIO',
+      'RESUMO DA SESSÃO — CHAMADA E SORTEIO',
       `Início: ${dataHora(state.iniciouEm)}`,
-      `Atualização: ${dataHora(state.ultimaAtualizacao)}`,
+      `Chamada: ${state.chamadaFinalizada ? 'finalizada em ' + dataHora(state.chamadaFinalizadaEm) : 'em andamento'}`,
+      `Presentes: ${c.presente} | Ausentes: ${c.ausente} | Dispensados: ${c.dispensado} | Pendentes: ${c.pendente}`,
       '',
       `Conselho: ${state.conselho.length}/7`,
       `Recusas MP: ${state.recusasMP.length}/3`,
       `Recusas Defesa: ${state.recusasDefesa.length}/3`,
-      `Impedidos/Ausentes: ${state.impedidos.length}`,
+      `Impedidos no sorteio: ${state.impedidos.length}`,
       `Suspensos: ${state.suspensos.length}`,
       `Restantes na urna: ${state.titulares.length} titulares e ${state.suplentes.length} suplentes`,
-      '',
-      'CONSELHO DE SENTENÇA:'
+      '', 'CONSELHO DE SENTENÇA:'
     ];
     state.conselho.forEach((n,i) => linhas.push(`${i+1}. ${n}`));
-
     if (state.historicoAcoes.length) {
-      linhas.push('', 'HISTÓRICO:');
+      linhas.push('', 'HISTÓRICO DO SORTEIO:');
       state.historicoAcoes.forEach((h,i) => linhas.push(`${i+1}. ${hora(h.em)} • ${h.jurado} • ${acaoLabel(h.acao)} • ${h.origem.toUpperCase()}`));
     }
     return linhas.join('\n');
   }
 
   window.abrirDocumento = function abrirDocumento(tipo) {
-    tipoDocumentoAtual = tipo;
     $('modal-title').textContent = tipo === 'ata' ? 'Texto para Ata' : 'Termo de Compromisso';
     $('texto-documento').value = tipo === 'ata' ? gerarTextoAta() : gerarTextoCompromisso();
+    $('modal-documento').dataset.tipo = tipo;
     $('modal-documento').classList.add('show');
-    setTimeout(() => $('texto-documento').focus(), 50);
   };
-
   window.fecharModal = function fecharModal() { $('modal-documento').classList.remove('show'); };
-
   window.copiarDocumento = async function copiarDocumento() {
     const text = $('texto-documento').value;
-    try {
-      await navigator.clipboard.writeText(text);
-      toast('Texto copiado para a área de transferência.');
-    } catch (_) {
-      $('texto-documento').select();
-      document.execCommand('copy');
-      toast('Texto copiado.');
-    }
+    try { await navigator.clipboard.writeText(text); toast('Texto copiado.'); }
+    catch (_) { $('texto-documento').select(); document.execCommand('copy'); toast('Texto copiado.'); }
   };
-
-  window.abrirResumo = function abrirResumo() {
-    $('texto-resumo').value = gerarResumo();
-    $('modal-resumo').classList.add('show');
-  };
+  window.abrirResumo = function abrirResumo() { $('texto-resumo').value = gerarResumo(); $('modal-resumo').classList.add('show'); };
   window.fecharResumo = function fecharResumo() { $('modal-resumo').classList.remove('show'); };
-  window.copiarResumo = async function copiarResumo() {
-    try { await navigator.clipboard.writeText($('texto-resumo').value); toast('Resumo copiado.'); }
-    catch (_) { $('texto-resumo').select(); document.execCommand('copy'); toast('Resumo copiado.'); }
-  };
+  window.copiarResumo = async function copiarResumo() { try { await navigator.clipboard.writeText($('texto-resumo').value); toast('Resumo copiado.'); } catch (_) { toast('Não foi possível copiar automaticamente.'); } };
 
-  function imprimirTexto(texto) {
-    $('print-area').textContent = texto;
-    window.print();
-  }
+  function imprimirTexto(texto) { $('print-area').textContent = texto; window.print(); }
   window.imprimirDocumento = function imprimirDocumento(tipo) { imprimirTexto(tipo === 'ata' ? gerarTextoAta() : gerarTextoCompromisso()); };
   window.imprimirTextoModal = function imprimirTextoModal() { imprimirTexto($('texto-documento').value); };
 
   window.exportarSessao = function exportarSessao() {
-    const payload = {
-      versao: 2,
-      exportadoEm: new Date().toISOString(),
-      comarca: 'Goiatins/TO',
-      ...state
-    };
-    const blob = new Blob([JSON.stringify(payload, null, 2)], { type: 'application/json;charset=utf-8' });
+    const payload = { versao:3, exportadoEm:new Date().toISOString(), comarca:'Goiatins/TO', fluxo:'chamada-nominal-e-sorteio', ...state };
+    const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
-    a.href = url;
-    a.download = `urna-juri-${new Date().toISOString().slice(0,10)}.json`;
-    document.body.appendChild(a);
-    a.click();
-    a.remove();
-    URL.revokeObjectURL(url);
+    a.href = url; a.download = `urna-juri-goiatins-${new Date().toISOString().slice(0,10)}.json`;
+    document.body.appendChild(a); a.click(); a.remove(); URL.revokeObjectURL(url);
     toast('Sessão exportada em JSON.');
   };
 
   window.reiniciarSessao = function reiniciarSessao() {
-    const msg = 'Iniciar uma nova sessão? Todo o andamento atual da urna será apagado deste navegador. Se necessário, exporte a sessão antes.';
-    if (!confirm(msg)) return;
-    state = novoEstado();
-    sorteando = false;
-    salvarEstado();
-    atualizarInterface();
-    toast('Nova sessão iniciada.');
+    if (!confirm('Iniciar uma nova sessão? A chamada e todo o sorteio atual serão apagados deste navegador.')) return;
+    state = novoEstado(); sorteando = false; localStorage.removeItem(STORAGE_KEY); atualizarInterface(); toast('Nova sessão iniciada pela chamada nominal.');
   };
 
   document.addEventListener('keydown', (ev) => {
-    const modalAberto = $('modal-documento').classList.contains('show') || $('modal-resumo').classList.contains('show');
-    if (ev.key === 'Escape') {
-      fecharModal();
-      fecharResumo();
-      return;
-    }
-    if (modalAberto || ['TEXTAREA','INPUT'].includes(document.activeElement?.tagName)) return;
-
-    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'z') {
-      ev.preventDefault();
-      desfazerUltimaAcao();
-      return;
-    }
-
+    const modalAberto = ['modal-documento','modal-resumo','modal-chamada'].some(id => $(id).classList.contains('show'));
+    if (ev.key === 'Escape') { fecharModal(); fecharResumo(); fecharChamada(); return; }
+    if (modalAberto || ['TEXTAREA','INPUT','SELECT'].includes(document.activeElement?.tagName)) return;
+    if (!state.chamadaFinalizada) return;
+    if ((ev.ctrlKey || ev.metaKey) && ev.key.toLowerCase() === 'z') { ev.preventDefault(); desfazerUltimaAcao(); return; }
     const key = ev.key.toLowerCase();
     if (key === ' ' && !state.juradoAtual) { ev.preventDefault(); realizarSorteio(); }
     else if (state.juradoAtual && key === 'a') registrarAcao('aceito');
@@ -1052,8 +1256,9 @@
     else if (state.juradoAtual && key === 's') registrarAcao('suspenso');
   });
 
-  $('modal-documento').addEventListener('click', (ev) => { if (ev.target === $('modal-documento')) fecharModal(); });
-  $('modal-resumo').addEventListener('click', (ev) => { if (ev.target === $('modal-resumo')) fecharResumo(); });
+  $('modal-documento').addEventListener('click', ev => { if (ev.target === $('modal-documento')) fecharModal(); });
+  $('modal-resumo').addEventListener('click', ev => { if (ev.target === $('modal-resumo')) fecharResumo(); });
+  $('modal-chamada').addEventListener('click', ev => { if (ev.target === $('modal-chamada')) fecharChamada(); });
 
   atualizarInterface();
 })();
