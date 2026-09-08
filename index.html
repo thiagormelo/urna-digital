@@ -153,6 +153,32 @@
       white-space: nowrap;
     }
 
+    .draw-mode-box {
+      display: grid;
+      grid-template-columns: minmax(0, 1fr) minmax(250px, 360px);
+      gap: 14px;
+      align-items: center;
+      margin: -5px 0 18px;
+      padding: 13px 15px;
+      border: 1px solid var(--line);
+      border-radius: 13px;
+      background: #f8fafc;
+    }
+    .draw-mode-copy strong { display: block; color: var(--primary-2); font-size: .84rem; margin-bottom: 3px; }
+    .draw-mode-copy span { color: var(--muted); font-size: .76rem; line-height: 1.4; }
+    .draw-mode-select {
+      width: 100%;
+      border: 1px solid #cbd5e1;
+      border-radius: 10px;
+      background: #fff;
+      color: var(--text);
+      padding: 11px 12px;
+      font-weight: 800;
+      font-size: .8rem;
+      cursor: pointer;
+    }
+    .draw-mode-select:disabled { opacity: .65; cursor: not-allowed; background: #eef2f7; }
+
     .draw-stage {
       min-height: 255px;
       border: 1px solid var(--line);
@@ -485,6 +511,7 @@
       .toolbar { padding: 8px 16px 0; }
       main { padding: 14px 16px 22px; }
       .draw-panel { padding: 17px; }
+      .draw-mode-box { grid-template-columns: 1fr; }
       .stage-top { align-items: flex-start; flex-direction: column; }
       .draw-stage { min-height: 235px; padding: 18px 12px; }
       .draw-btn { min-width: 0; width: 100%; }
@@ -550,7 +577,7 @@
           <div class="attendance-stat present"><strong id="call-presentes">0</strong><span>Presentes</span></div>
           <div class="attendance-stat absent"><strong id="call-ausentes">0</strong><span>Ausentes</span></div>
           <div class="attendance-stat excused"><strong id="call-dispensados">0</strong><span>Dispensados</span></div>
-          <div class="attendance-stat"><strong id="call-pendentes">35</strong><span>Pendentes</span></div>
+          <div class="attendance-stat"><strong id="call-pendentes">25</strong><span>Pendentes</span></div>
         </div>
       </div>
 
@@ -568,11 +595,11 @@
 
       <div class="attendance-groups">
         <div class="attendance-group">
-          <div class="attendance-group-head"><strong>Jurados titulares</strong><span>25 convocados</span></div>
+          <div class="attendance-group-head"><strong>Jurados titulares</strong><span>16 convocados</span></div>
           <div class="attendance-list" id="call-titulares"></div>
         </div>
         <div class="attendance-group">
-          <div class="attendance-group-head"><strong>Jurados suplentes</strong><span>10 convocados</span></div>
+          <div class="attendance-group-head"><strong>Jurados suplentes</strong><span>9 convocados</span></div>
           <div class="attendance-list" id="call-suplentes"></div>
         </div>
       </div>
@@ -595,9 +622,20 @@
           <div class="stage-title">
             <div class="step-badge">ETAPA 2 DE 2 • SORTEIO</div>
             <h2>Sorteio dos jurados presentes</h2>
-            <p>Participam do sorteio exclusivamente os jurados classificados como presentes na chamada. Todos os jurados presentes integram uma única urna para o sorteio, preservando-se apenas a identificação de titular ou suplente para registro.</p>
+            <p>Participam do sorteio exclusivamente os jurados classificados como presentes na chamada. Antes do primeiro sorteio, escolha se a urna deve <strong>priorizar os titulares</strong> ou sortear <strong>todos os presentes em conjunto</strong>.</p>
           </div>
           <div class="session-pill" id="session-pill">Sessão iniciada</div>
+        </div>
+
+        <div class="draw-mode-box" id="draw-mode-box">
+          <div class="draw-mode-copy">
+            <strong>Ordem da urna</strong>
+            <span id="draw-mode-help">Titulares presentes serão sorteados primeiro. Os suplentes passam a participar quando não houver mais titulares disponíveis.</span>
+          </div>
+          <select class="draw-mode-select" id="draw-mode-select" onchange="alterarModoSorteio(this.value)" aria-label="Escolher ordem do sorteio">
+            <option value="titulares_primeiro">Titulares primeiro</option>
+            <option value="todos_presentes">Todos os presentes juntos</option>
+          </select>
         </div>
 
         <div class="draw-stage" aria-live="polite">
@@ -722,27 +760,39 @@
 (() => {
   'use strict';
 
-  const STORAGE_KEY = 'urna-juri-goiatins-chamada-v3';
+  const STORAGE_KEY = 'urna-juri-goiatins-chamada-v4';
   const MAX_RECUSAS = 3;
   const TOTAL_CONSELHO = 7;
   const MIN_PRESENTES_INSTALACAO = 15;
 
   const TITULARES_INICIAIS = [
-    "ÉLIDA FERREIRA CARVALHO", "RITA SOARES BRANDÃO ARAUJO", "KATIANE FERREIRA DIAS",
-    "LIDIANE GOMES VIEIRA", "MARCOS FERREIRA ROCHA", "GILSON GOMES DA SILVA",
-    "NÚRIA TEIXEIRA BELCHIOR", "SHIRLANDIA GOMES CAVALCANTE", "FRANCINETE SANTOS DA SILVA",
-    "MATEUS ANDRADE DA SILVA", "EDUARDA SILVA SOARES", "KAILANE BRITO SANTOS",
-    "ANDRÉ LUIZ AVELAR DA SILVA", "ELIZANE FERREIRA COSTA", "ALMECIDES CARVALHO DA SILVA",
-    "DANIELLE SOUZA SILVA SANTOS", "FERNANDA MENEZES DE SOUSA", "HELINE TALITA DE SOUZA BARROS OLIVEIRA",
-    "LUZIANE MENDES DE SOUZA SOARES", "RAIMUNDA NONATA MOREIRA DA ROCHA", "LOECY RODRIGUES GUIDA",
-    "MARIA ALBANIZA SOUSA SAORIN", "MARIA DE LOURDES DA CRUZ BRITO SILVA", "PEDRO HENRIQUE ALVES VASCONCELOS",
-    "MARIA PEREIRA DE BRITO RODRIGUES"
+    "ÉLIDA FERREIRA CARVALHO",
+    "RITA SOARES BRANDÃO ARAUJO",
+    "MARCOS FERREIRA ROCHA",
+    "GILSON GOMES DA SILVA",
+    "NÚRIA TEIXEIRA BELCHIOR",
+    "SHIRLANDIA GOMES CAVALCANTE",
+    "FRANCINETE SANTOS DA SILVA",
+    "MATEUS ANDRADE DA SILVA",
+    "EDUARDA SILVA SOARES",
+    "KAILANE BRITO SANTOS",
+    "ANDRÉ LUIZ AVELAR DA SILVA",
+    "HELINE TALITA DE SOUZA BARROS OLIVEIRA",
+    "RAIMUNDA NONATA MOREIRA DA ROCHA",
+    "LOECY RODRIGUES GUIDA",
+    "MARIA ALBANIZA SOUSA SAORIN",
+    "MARIA DE LOURDES DA CRUZ BRITO SILVA"
   ];
 
   const SUPLENTES_INICIAIS = [
-    "MARIA DE JESUS DIAS CAVALCANTE", "AMANDA SARAIVA NERES SOUSA", "ROSELY DE OLIVEIRA DIAS",
-    "CARINE XAVIER MORAIS OLIVEIRA", "DELMANA SILVA DE CARVALHO TAVARES", "ANA PAULA GONÇALVES DA SILVA",
-    "MAYKSANE QUIXABA MORAES", "JOSÉ RAIMUNDO BEZERRA LIMA", "JOSAFÁ AMORIM MARINHO",
+    "AMANDA SARAIVA NERES SOUSA",
+    "ROSELY DE OLIVEIRA DIAS",
+    "CARINE XAVIER MORAIS OLIVEIRA",
+    "DELMANA SILVA DE CARVALHO TAVARES",
+    "ANA PAULA GONÇALVES DA SILVA",
+    "MAYKSANE QUIXABA MORAES",
+    "JOSÉ RAIMUNDO BEZERRA LIMA",
+    "JOSAFÁ AMORIM MARINHO",
     "GUSTAVO CARVALHO CAMPOS"
   ];
 
@@ -757,6 +807,7 @@
       fase: 'chamada',
       chamadaFinalizada: false,
       chamadaFinalizadaEm: null,
+      sorteioModo: 'titulares_primeiro',
       presencas: mapaPresencasVazio(),
       titulares: [],
       suplentes: [],
@@ -965,6 +1016,7 @@
       state.chamadaFinalizadaEm ? `Finalizada em: ${dataHora(state.chamadaFinalizadaEm)}` : '',
       '',
       `Presentes: ${c.presente} | Ausentes: ${c.ausente} | Dispensados: ${c.dispensado} | Pendentes: ${c.pendente}`,
+      `Modo de sorteio: ${state.sorteioModo === 'titulares_primeiro' ? 'Titulares primeiro' : 'Todos os presentes juntos'}`,
       '',
       `PRESENTES — TITULARES (${presentesT.length})`,
       ...presentesT.map((n,i) => `${i+1}. ${n}`),
@@ -1000,6 +1052,17 @@
     catch (_) { toast('Não foi possível copiar automaticamente.'); }
   };
 
+  window.alterarModoSorteio = function alterarModoSorteio(modo) {
+    if (!['titulares_primeiro','todos_presentes'].includes(modo)) return;
+    if (sorteioJaIniciado()) {
+      $('draw-mode-select').value = state.sorteioModo;
+      return toast('A ordem do sorteio não pode ser alterada depois do primeiro sorteio.');
+    }
+    state.sorteioModo = modo;
+    atualizarInterface();
+    toast(modo === 'titulares_primeiro' ? 'Modo: titulares primeiro.' : 'Modo: todos os presentes juntos.');
+  };
+
   function acaoLabel(acao) {
     return { aceito:'ACEITO', recusa_mp:'RECUSA MP', recusa_def:'RECUSA DEFESA', impedido:'IMPEDIDO', suspenso:'SUSPENSO' }[acao] || acao;
   }
@@ -1033,6 +1096,13 @@
     $('status-susp').textContent = state.suspensos.length;
     $('btn-mp').disabled = state.recusasMP.length >= MAX_RECUSAS;
     $('btn-def').disabled = state.recusasDefesa.length >= MAX_RECUSAS;
+
+    const modo = state.sorteioModo || 'titulares_primeiro';
+    $('draw-mode-select').value = modo;
+    $('draw-mode-select').disabled = sorteioJaIniciado();
+    $('draw-mode-help').textContent = modo === 'titulares_primeiro'
+      ? 'Titulares presentes serão sorteados primeiro. Os suplentes passam a participar quando não houver mais titulares disponíveis.'
+      : 'Todos os jurados presentes participam juntos da mesma seleção aleatória, independentemente de serem titulares ou suplentes.';
 
     const percentual = Math.min(100, (state.conselho.length / TOTAL_CONSELHO) * 100);
     $('progress-fill').style.width = `${percentual}%`;
@@ -1071,7 +1141,15 @@
       $('btn-sortear').textContent = '✓ SORTEIO CONCLUÍDO';
     } else if (!hasCurrent && !sorteando) {
       const restantes = state.titulares.length + state.suplentes.length;
-      $('draw-hint').textContent = `${restantes} jurado(s) presente(s) ainda disponível(is) na urna.`;
+      if (state.sorteioModo === 'titulares_primeiro') {
+        if (state.titulares.length > 0) {
+          $('draw-hint').textContent = `${state.titulares.length} titular(es) presente(s) disponível(is). Os suplentes entram após o esgotamento dos titulares.`;
+        } else {
+          $('draw-hint').textContent = `Titulares esgotados. ${state.suplentes.length} suplente(s) presente(s) disponível(is).`;
+        }
+      } else {
+        $('draw-hint').textContent = `${restantes} jurado(s) presente(s) disponível(is) na urna conjunta.`;
+      }
       $('btn-sortear').textContent = '🎲 SORTEAR PRÓXIMO JURADO';
     }
   }
@@ -1101,10 +1179,17 @@
     if (!state.titulares.length && !state.suplentes.length) return alert('A urna está vazia. Não há mais jurados presentes disponíveis.');
     sorteando = true; atualizarInterface();
     setTimeout(() => {
-      const disponiveis = [
-        ...state.titulares.map(nome => ({ nome, origem: 'titular' })),
-        ...state.suplentes.map(nome => ({ nome, origem: 'suplente' }))
-      ];
+      let disponiveis;
+      if ((state.sorteioModo || 'titulares_primeiro') === 'titulares_primeiro') {
+        disponiveis = state.titulares.length
+          ? state.titulares.map(nome => ({ nome, origem: 'titular' }))
+          : state.suplentes.map(nome => ({ nome, origem: 'suplente' }));
+      } else {
+        disponiveis = [
+          ...state.titulares.map(nome => ({ nome, origem: 'titular' })),
+          ...state.suplentes.map(nome => ({ nome, origem: 'suplente' }))
+        ];
+      }
       const escolhido = disponiveis[randomIndex(disponiveis.length)];
       state.juradoAtual = escolhido.nome;
       state.origemJuradoAtual = escolhido.origem;
@@ -1156,7 +1241,10 @@
   function gerarTextoAta() {
     const c = contagemChamada();
     let texto = 'IV - DA CHAMADA E DA FORMAÇÃO DO CONSELHO DE SENTENÇA\n';
-    texto += `Realizada a chamada nominal dos jurados convocados, registraram-se ${c.presente} presente(s), ${c.ausente} ausente(s) e ${c.dispensado} dispensado(s). Os ausentes e dispensados foram excluídos da urna, prosseguindo-se ao sorteio exclusivamente entre os jurados presentes, cujas cédulas passaram a compor a urna de sorteio.\n\n`;
+    texto += `Realizada a chamada nominal dos jurados convocados, registraram-se ${c.presente} presente(s), ${c.ausente} ausente(s) e ${c.dispensado} dispensado(s). Os ausentes e dispensados foram excluídos da urna, prosseguindo-se ao sorteio exclusivamente entre os jurados presentes.\n\n`;
+    texto += state.sorteioModo === 'titulares_primeiro'
+      ? 'Definiu-se, para esta sessão, a modalidade de sorteio com prioridade aos jurados titulares presentes, passando-se aos suplentes após o esgotamento dos titulares disponíveis.\n\n'
+      : 'Definiu-se, para esta sessão, a modalidade de urna conjunta, com participação simultânea de titulares e suplentes presentes.\n\n';
     texto += 'Ato contínuo, o MM. Juiz Presidente procedeu ao sorteio eletrônico para a formação do Conselho de Sentença, sendo sorteados e ACEITOS os seguintes jurados:\n\n';
     state.conselho.forEach((nome,i) => { texto += `${i+1}. ${nome}\n`; });
     if (state.recusasMP.length || state.recusasDefesa.length || state.impedidos.length || state.suspensos.length) {
@@ -1227,7 +1315,7 @@
   window.imprimirTextoModal = function imprimirTextoModal() { imprimirTexto($('texto-documento').value); };
 
   window.exportarSessao = function exportarSessao() {
-    const payload = { versao:3, exportadoEm:new Date().toISOString(), comarca:'Goiatins/TO', fluxo:'chamada-nominal-e-sorteio', ...state };
+    const payload = { versao:4, exportadoEm:new Date().toISOString(), comarca:'Goiatins/TO', fluxo:'chamada-nominal-e-sorteio', ...state };
     const blob = new Blob([JSON.stringify(payload,null,2)], {type:'application/json;charset=utf-8'});
     const url = URL.createObjectURL(blob);
     const a = document.createElement('a');
